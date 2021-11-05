@@ -6,13 +6,15 @@ import PrivateRoute from '../private-route/private-route';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { Offers } from '../../types/offer';
 import { Cities } from '../../types/city';
+import { Reviews } from '../../types/review';
 
 type AppProps = {
   offers: Offers,
   cities: Cities,
+  reviews: Reviews,
 };
 
-function App({ offers, cities }: AppProps): JSX.Element {
+function App({ offers, cities, reviews }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Switch>
@@ -29,7 +31,7 @@ function App({ offers, cities }: AppProps): JSX.Element {
           <LoginScreen />
         </Route>
         <Route exact path={`${AppRoute.Room}/:id`}>
-          <RoomScreen offers={offers} />
+          <RoomScreen offers={offers} reviews={reviews} cities={cities} />
         </Route>
         <Route>
           <NotFoundScreen />

@@ -84,6 +84,7 @@ function MainScreen({ offers, cities }: MainScreenProps): JSX.Element {
               <PlacesList
                 offers={offers}
                 onCardItemHover={onCardItemHover}
+                className='cities__places-list tabs__content'
               />
             </section>
             <div className="cities__right-section">

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { AppRoute, PlaceCardType, PlaceType } from '../../const';
+import { starRating } from '../../utils/utils';
 import { Offer } from '../../types/offer';
 
 type PlaceCardProps = {
@@ -10,14 +11,11 @@ type PlaceCardProps = {
   placeType: PlaceType,
 };
 
-const PERCENT = 100;
-const SCALE = 5;
-
 function PlaceCard({ offer, onMouseOver, onMouseOut, placeType }: PlaceCardProps): JSX.Element {
   const { id, isPremium, previewImage, price, isFavorite, rating, title, type } = offer;
 
   // Если рейтинг по 5-бальной шкале приходит с бэка
-  const starRating = rating * PERCENT / SCALE;
+  const starsRating = starRating(rating);
 
   return (
     <article
@@ -25,7 +23,7 @@ function PlaceCard({ offer, onMouseOver, onMouseOut, placeType }: PlaceCardProps
       onMouseOver={onMouseOver}
       onMouseOut={onMouseOut}
     >
-      {placeType !== PlaceType.Favorites && isPremium && (
+      {placeType === PlaceType.Main && isPremium && (
         <div className="place-card__mark">
           <span>Premium</span>
         </div>
@@ -61,7 +59,7 @@ function PlaceCard({ offer, onMouseOver, onMouseOut, placeType }: PlaceCardProps
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${starRating}%` }} />
+            <span style={{ width: `${starsRating}%` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
