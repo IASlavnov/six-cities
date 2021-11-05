@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import PlaceCard from '../place-card/place-card';
 
 import { PlaceType } from '../../const';
@@ -7,10 +5,13 @@ import { Offers } from '../../types/offer';
 
 type PlacesListProps = {
   offers: Offers,
+  onCardItemHover: (id: number | null) => void,
 };
 
-function PlacesList({ offers }: PlacesListProps): JSX.Element {
-  const [activeCard, setActiveCard] = useState<number | null>(null);
+function PlacesList({ offers, onCardItemHover }: PlacesListProps): JSX.Element {
+  const cardItemHoverHandler = (cardId: number | null) => {
+    onCardItemHover(cardId);
+  };
 
   return (
     <div className="cities__places-list places__list tabs__content">
@@ -19,14 +20,12 @@ function PlacesList({ offers }: PlacesListProps): JSX.Element {
           <PlaceCard
             key={offer.id}
             offer={offer}
-            onMouseOver={() => setActiveCard(offer.id)}
-            onMouseOut={() => setActiveCard(null)}
+            onMouseOver={() => cardItemHoverHandler(offer.id)}
+            onMouseOut={() => cardItemHoverHandler(null)}
             placeType={PlaceType.Main}
           />
         ))
       }
-      {/* Временно для линтера */}
-      <p>Активная карточка: {activeCard}</p>
     </div>
   );
 }

@@ -5,17 +5,19 @@ import PrivateRoute from '../private-route/private-route';
 
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { Offers } from '../../types/offer';
+import { Cities } from '../../types/city';
 
 type AppProps = {
   offers: Offers,
+  cities: Cities,
 };
 
-function App({ offers }: AppProps): JSX.Element {
+function App({ offers, cities }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path={AppRoute.Root}>
-          <MainScreen offers={offers} />
+          <MainScreen offers={offers} cities={cities} />
         </Route>
         <PrivateRoute
           exact
