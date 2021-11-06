@@ -6,15 +6,18 @@ import { Offers } from '../../types/offer';
 type PlacesListProps = {
   offers: Offers,
   onCardItemHover: (id: number | null) => void,
+  className?: string,
 };
 
-function PlacesList({ offers, onCardItemHover }: PlacesListProps): JSX.Element {
+function PlacesList({ offers, onCardItemHover, className = 'near-places__list' }: PlacesListProps): JSX.Element {
   const cardItemHoverHandler = (cardId: number | null) => {
     onCardItemHover(cardId);
   };
 
+  const placeType = className === 'near-places__list' ? PlaceType.NearPlaces : PlaceType.Main;
+
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <div className={`places__list ${className}`}>
       {
         offers.map((offer) => (
           <PlaceCard
@@ -22,7 +25,7 @@ function PlacesList({ offers, onCardItemHover }: PlacesListProps): JSX.Element {
             offer={offer}
             onMouseOver={() => cardItemHoverHandler(offer.id)}
             onMouseOut={() => cardItemHoverHandler(null)}
-            placeType={PlaceType.Main}
+            placeType={placeType}
           />
         ))
       }
