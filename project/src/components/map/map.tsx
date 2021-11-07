@@ -32,6 +32,12 @@ function Map({ city, offers, selectedCard, className = 'cities__map' }: MapProps
   });
 
   useEffect(() => {
+    if(map) {
+      map.flyTo([city.location.latitude, city.location.longitude]);
+    }
+  });
+
+  useEffect(() => {
     if (map) {
       offers.forEach((offer) => {
         leaflet

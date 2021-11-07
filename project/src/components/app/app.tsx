@@ -4,34 +4,32 @@ import { FavoritesScreen, LoginScreen, MainScreen, NotFoundScreen, RoomScreen } 
 import PrivateRoute from '../private-route/private-route';
 
 import { AppRoute, AuthorizationStatus } from '../../const';
-import { Offers } from '../../types/offer';
-import { Cities } from '../../types/city';
+
 import { Reviews } from '../../types/review';
 
 type AppProps = {
-  offers: Offers,
-  cities: Cities,
   reviews: Reviews,
 };
 
-function App({ offers, cities, reviews }: AppProps): JSX.Element {
+function App({ reviews }: AppProps): JSX.Element {
+
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path={AppRoute.Root}>
-          <MainScreen offers={offers} cities={cities} />
+          <MainScreen />
         </Route>
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
-          render={() => <FavoritesScreen offers={offers} />}
+          render={() => <FavoritesScreen />}
           authorizationStatus={AuthorizationStatus.Auth}
         />
         <Route exact path={AppRoute.Login}>
           <LoginScreen />
         </Route>
         <Route exact path={`${AppRoute.Room}/:id`}>
-          <RoomScreen offers={offers} reviews={reviews} cities={cities} />
+          <RoomScreen reviews={reviews} />
         </Route>
         <Route>
           <NotFoundScreen />
