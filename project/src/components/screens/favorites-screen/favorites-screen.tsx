@@ -1,15 +1,36 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Dispatch } from 'redux';
+import { connect, ConnectedProps } from 'react-redux';
 
 import Header from '../../header/header';
 import FavoritesList from '../../favorites-list/favorites-list';
 
-import { Offers } from '../../../types/offer';
+import { setOffers } from '../../../store/action';
+import { offers as mockOffers } from '../../../mocks/offers';
 
-type FavoritesScreenProps = {
-  offers: Offers,
-};
+import { Actions } from '../../../types/action';
+import { State } from '../../../types/state';
 
-function FavoritesScreen({ offers }: FavoritesScreenProps): JSX.Element {
+const mapStateToProps = ({ offers }: State) => ({
+  offers: offers.filter((offer) => offer.isFavorite),
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
+  fetchData() {
+    dispatch(setOffers(mockOffers));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function FavoritesScreen({ offers, fetchData }: PropsFromRedux): JSX.Element {
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
   return (
     <div className="page">
       <Header />
@@ -31,4 +52,5 @@ function FavoritesScreen({ offers }: FavoritesScreenProps): JSX.Element {
   );
 }
 
-export default FavoritesScreen;
+export { FavoritesScreen };
+export default connector(FavoritesScreen);

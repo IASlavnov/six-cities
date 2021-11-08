@@ -1,23 +1,43 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Dispatch } from 'redux';
+import { connect, ConnectedProps } from 'react-redux';
 
 import Header from '../../header/header';
+import Tabs from '../../tabs/tabs';
 import PlacesList from '../../places-list/places-list';
 import Map from '../../map/map';
 
-import { Offers } from '../../../types/offer';
-import { Cities } from '../../../types/city';
+import { setOffers } from '../../../store/action';
+import { offers as mockOffers } from '../../../mocks/offers';
 
-type MainScreenProps = {
-  offers: Offers,
-  cities: Cities,
-};
+import { Actions } from '../../../types/action';
+import { State } from '../../../types/state';
 
-function MainScreen({ offers, cities }: MainScreenProps): JSX.Element {
+const mapStateToProps = (state: State) => ({
+  offers: state.offers.filter((offer) => offer.city.name === state.city.name),
+  city: state.city,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
+  fetchData() {
+    dispatch(setOffers(mockOffers));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function MainScreen({ offers, city, fetchData }: PropsFromRedux): JSX.Element {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
   const onCardItemHover = (cardId: number | null) => {
     setSelectedCard(cardId);
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <div className="page page--gray page--main">
@@ -25,47 +45,12 @@ function MainScreen({ offers, cities }: MainScreenProps): JSX.Element {
 
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
-        </div>
+        <Tabs />
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offers.length} places to stay in Amsterdam</b>
+              <b className="places__found">{offers.length} places to stay in {city.name}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -89,7 +74,7 @@ function MainScreen({ offers, cities }: MainScreenProps): JSX.Element {
             </section>
             <div className="cities__right-section">
               <Map
-                city={cities[0]}
+                city={city}
                 offers={offers}
                 selectedCard={selectedCard}
               />
@@ -101,4 +86,5 @@ function MainScreen({ offers, cities }: MainScreenProps): JSX.Element {
   );
 }
 
-export default MainScreen;
+export { MainScreen };
+export default connector(MainScreen);
