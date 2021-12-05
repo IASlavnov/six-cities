@@ -109,3 +109,10 @@ export const CITIES = [
 ];
 
 export const DEFAULT_CITY = CITIES[0];
+
+export const SORT_TYPES = [
+  'Popular',
+  'Price: low to high',
+  'Price: high to low',
+  'Top rated first',
+] as const;
