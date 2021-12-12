@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 
 import { NotFoundScreen } from '../index';
@@ -10,12 +9,8 @@ import ReviewForm from '../../review-form/review-form';
 import Map from '../../map/map';
 import PlacesList from '../../places-list/places-list';
 
-import { setOffers } from '../../../store/action';
-import { offers as mockOffers } from '../../../mocks/offers';
-
 import { starRating } from '../../../utils/utils';
 import { Reviews } from '../../../types/review';
-import { Actions } from '../../../types/action';
 import { State } from '../../../types/state';
 
 type RoomScreenProps = {
@@ -27,29 +22,19 @@ const mapStateToProps = ({offers, city}: State) => ({
   city,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  fetchData() {
-    dispatch(setOffers(mockOffers));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = RoomScreenProps & PropsFromRedux;
 
 const MAX_IMAGE_FOR_GALLERY = 6;
 
-function RoomScreen({ offers, reviews, city, fetchData }: ConnectedComponentProps): JSX.Element {
+function RoomScreen({ offers, reviews, city }: ConnectedComponentProps): JSX.Element {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
 
   const onCardItemHover = (cardId: number | null) => {
     setSelectedCard(cardId);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const { id } = useParams<{ id: string }>();
   const offer = offers.find((o) => o.id === +id);

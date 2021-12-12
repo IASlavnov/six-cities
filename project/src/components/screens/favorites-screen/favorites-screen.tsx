@@ -1,35 +1,20 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 
 import Header from '../../header/header';
 import FavoritesList from '../../favorites-list/favorites-list';
 
-import { setOffers } from '../../../store/action';
-import { offers as mockOffers } from '../../../mocks/offers';
-
-import { Actions } from '../../../types/action';
 import { State } from '../../../types/state';
 
 const mapStateToProps = ({ offers }: State) => ({
   offers: offers.filter((offer) => offer.isFavorite),
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  fetchData() {
-    dispatch(setOffers(mockOffers));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-function FavoritesScreen({ offers, fetchData }: PropsFromRedux): JSX.Element {
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+function FavoritesScreen({ offers }: PropsFromRedux): JSX.Element {
 
   return (
     <div className="page">

@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { Dispatch } from 'redux';
+import { useState } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import Header from '../../header/header';
@@ -8,11 +7,8 @@ import Sort from '../../sort/sort';
 import PlacesList from '../../places-list/places-list';
 import Map from '../../map/map';
 
-import { setOffers } from '../../../store/action';
-import { offers as mockOffers } from '../../../mocks/offers';
 import { sortOffers } from '../../../utils/utils';
 
-import { Actions } from '../../../types/action';
 import { State } from '../../../types/state';
 
 const mapStateToProps = (state: State) => ({
@@ -20,17 +16,11 @@ const mapStateToProps = (state: State) => ({
   city: state.city,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  fetchData() {
-    dispatch(setOffers(mockOffers));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-function MainScreen({ offers, city, fetchData }: PropsFromRedux): JSX.Element {
+function MainScreen({ offers, city }: PropsFromRedux): JSX.Element {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
   const [sort, setSort] = useState('Popular');
 
@@ -41,10 +31,6 @@ function MainScreen({ offers, city, fetchData }: PropsFromRedux): JSX.Element {
   const onSortClick = (sortType: string) => {
     setSort(sortType);
   };
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   const sortedOffers = sortOffers(offers, sort);
 
@@ -70,7 +56,7 @@ function MainScreen({ offers, city, fetchData }: PropsFromRedux): JSX.Element {
             <div className="cities__right-section">
               <Map
                 city={city}
-                offers={offers}
+                offers={sortedOffers}
                 selectedCard={selectedCard}
               />
             </div>
