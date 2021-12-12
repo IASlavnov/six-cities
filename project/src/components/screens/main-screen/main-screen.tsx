@@ -4,11 +4,13 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import Header from '../../header/header';
 import Tabs from '../../tabs/tabs';
+import Sort from '../../sort/sort';
 import PlacesList from '../../places-list/places-list';
 import Map from '../../map/map';
 
 import { setOffers } from '../../../store/action';
 import { offers as mockOffers } from '../../../mocks/offers';
+import { sortOffers } from '../../../utils/utils';
 
 import { Actions } from '../../../types/action';
 import { State } from '../../../types/state';
@@ -30,14 +32,21 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function MainScreen({ offers, city, fetchData }: PropsFromRedux): JSX.Element {
   const [selectedCard, setSelectedCard] = useState<number | null>(null);
+  const [sort, setSort] = useState('Popular');
 
   const onCardItemHover = (cardId: number | null) => {
     setSelectedCard(cardId);
   };
 
+  const onSortClick = (sortType: string) => {
+    setSort(sortType);
+  };
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const sortedOffers = sortOffers(offers, sort);
 
   return (
     <div className="page page--gray page--main">
@@ -51,23 +60,9 @@ function MainScreen({ offers, city, fetchData }: PropsFromRedux): JSX.Element {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{offers.length} places to stay in {city.name}</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width="7" height="4">
-                    <use xlinkHref="#icon-arrow-select"></use>
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                  <li className="places__option" tabIndex={0}>Price: low to high</li>
-                  <li className="places__option" tabIndex={0}>Price: high to low</li>
-                  <li className="places__option" tabIndex={0}>Top rated first</li>
-                </ul>
-              </form>
+              <Sort sort={sort} onSortClick={onSortClick} />
               <PlacesList
-                offers={offers}
+                offers={sortedOffers}
                 onCardItemHover={onCardItemHover}
                 className='cities__places-list tabs__content'
               />
