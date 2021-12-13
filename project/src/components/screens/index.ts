@@ -3,11 +3,13 @@ import FavoritesScreen from './favorites-screen/favorites-screen';
 import LoginScreen from './login-screen/login-screen';
 import RoomScreen from './room-screen/room-screen';
 import NotFoundScreen from './not-found-screen/not-found-screen';
+import LoadingScreen from './loading-screen/loading-screen';
 
 export {
   MainScreen,
   FavoritesScreen,
   LoginScreen,
   RoomScreen,
-  NotFoundScreen
+  NotFoundScreen,
+  LoadingScreen
 };

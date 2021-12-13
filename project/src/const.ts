@@ -116,3 +116,7 @@ export const SORT_TYPES = [
   'Price: high to low',
   'Top rated first',
 ] as const;
+
+export enum APIRoute {
+  Offers = '/hotels',
+}

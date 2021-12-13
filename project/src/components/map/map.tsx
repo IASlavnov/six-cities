@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import leaflet from 'leaflet';
+import leaflet, { Marker } from 'leaflet';
 
 import useMap from '../../hooks/useMap';
 import { MAP_HEIGHT, DEFAULT_ICON, CURRENT_ICON, IconSize } from '../../const';
@@ -33,26 +33,34 @@ function Map({ city, offers, selectedCard, className = 'cities__map' }: MapProps
 
   useEffect(() => {
     if(map) {
-      map.flyTo([city.location.latitude, city.location.longitude]);
+      map.flyTo([city.location.latitude, city.location.longitude], 10);
     }
   });
 
   useEffect(() => {
+    const markers: Marker[] = [];
+
     if (map) {
       offers.forEach((offer) => {
-        leaflet
-          .marker({
-            lat: offer.city.location.latitude,
-            lng: offer.city.location.longitude,
-          }, {
-            icon: (offer.id === selectedCard)
+        const marker = new Marker({
+          lat: offer.location.latitude,
+          lng: offer.location.longitude,
+        });
+
+        marker
+          .setIcon(
+            offer.id === selectedCard
               ? currentCustomIcon
               : defaultCustomIcon,
-          })
+          )
           .addTo(map);
+
+        markers.push(marker);
       });
     }
-  }, [map, offers, selectedCard, currentCustomIcon, defaultCustomIcon]);
+
+    return () => markers.forEach((marker) => marker.remove());
+  }, [map, offers, selectedCard]);
 
   return (
     <section
